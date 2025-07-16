@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reviews   Review[]
+}
+
+model FoodSpot {
+  id           String   @id @default(uuid())
+  name         String
+  type         String          // e.g., Tea, Meals
+  location     String
+  latitude     Float?
+  longitude    Float?
+  imageUrl     String
+  hours        String?
+  isOpen       Boolean  @default(false)
+  availableNow Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  reviews      Review[]
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String?
+  imageUrl   String?
+  createdAt  DateTime @default(now())
+  userId     String
+  foodSpotId String
+  user       User     @relation(fields: [userId], references: [id])
+  foodSpot   FoodSpot @relation(fields: [foodSpotId], references: [id])
+}
