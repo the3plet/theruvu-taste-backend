@@ -1,10 +1,12 @@
-import { FoodspotService } from "../services/foodspot.service.js";
+import { FoodspotService } from "../services/foodspot.service";
 import { Request, Response } from "express";
 
 export const FoodspotController = {
   create: async (req: Request, res: Response) => {
     try {
-      const newSpot = await FoodspotService.createFoodspot(req.body);
+      const ownerId = req.user?.userId;
+      if (!ownerId) return res.status(401).json({ error: "Unauthorized" });
+      const newSpot = await FoodspotService.createFoodspot(req.body, ownerId);
       res.status(201).json(newSpot);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
@@ -30,9 +32,13 @@ export const FoodspotController = {
   },
   update: async (req: Request, res: Response) => {
     try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
       const update = await FoodspotService.updateFoodspot(
         req.params.id,
-        req.body
+        req.body,
+        userId
       );
       res.json(update);
     } catch (error: any) {
@@ -41,7 +47,10 @@ export const FoodspotController = {
   },
   delete: async (req: Request, res: Response) => {
     try {
-      await FoodspotService.deleteFoodspot(req.params.id);
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+      await FoodspotService.deleteFoodspot(req.params.id, userId);
       res
         .status(204)
         .json({ message: `${req.params.id} is deleted` })

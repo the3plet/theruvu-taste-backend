@@ -1,5 +1,7 @@
-import prisma from "../../../config/prisma.js";
+
+import prisma from "../../../config/prisma";
 import { User } from "@prisma/client";
+
 
 export const UserRepository={
     findByEmail:(email:string):Promise<User|null>=>{
