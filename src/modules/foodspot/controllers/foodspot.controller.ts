@@ -1,17 +1,27 @@
 import { FoodspotService } from "../services/foodspot.service";
 import { Request, Response } from "express";
 
+// Type assertion as a workaround
+interface AuthenticatedRequest extends Request {
+  user?: {
+    userId: string;
+  };
+}
+
 export const FoodspotController = {
   create: async (req: Request, res: Response) => {
     try {
-      const ownerId = req.user?.userId;
+      const authReq = req as AuthenticatedRequest;
+      const ownerId = authReq.user?.userId;
       if (!ownerId) return res.status(401).json({ error: "Unauthorized" });
+      
       const newSpot = await FoodspotService.createFoodspot(req.body, ownerId);
       res.status(201).json(newSpot);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
   },
+
   getAll: async (_req: Request, res: Response) => {
     try {
       const foodSpot = await FoodspotService.getAllFoodspot();
@@ -20,6 +30,7 @@ export const FoodspotController = {
       res.status(500).json({ error: error.message });
     }
   },
+
   getById: async (req: Request, res: Response) => {
     try {
       const foodSpot = await FoodspotService.getFoodspotByid(req.params.id);
@@ -30,9 +41,11 @@ export const FoodspotController = {
       res.status(500).json({ error: error.message });
     }
   },
+
   update: async (req: Request, res: Response) => {
     try {
-      const userId = req.user?.userId;
+      const authReq = req as AuthenticatedRequest;
+      const userId = authReq.user?.userId;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
       const update = await FoodspotService.updateFoodspot(
@@ -45,9 +58,11 @@ export const FoodspotController = {
       res.status(500).json({ error: error.message });
     }
   },
+
   delete: async (req: Request, res: Response) => {
     try {
-      const userId = req.user?.userId;
+      const authReq = req as AuthenticatedRequest;
+      const userId = authReq.user?.userId;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
       await FoodspotService.deleteFoodspot(req.params.id, userId);
