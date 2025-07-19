@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -10,41 +9,57 @@ datasource db {
 
 model User {
   id        String     @id @default(uuid())
-  name      String
   email     String     @unique
   password  String
+  name      String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+
+  foodSpots FoodSpot[] // One user owns many foodspots
   reviews   Review[]
-  foodSpots FoodSpot[] // ownership relation
 }
 
 model FoodSpot {
-  id           String     @id @default(uuid())
+  id           String      @id @default(uuid())
   name         String
-  type         String
+  description  String      @default("No description provided")
   location     String
-  latitude     Float?
-  longitude    Float?
   imageUrl     String
-  hours        String?
-  isOpen       Boolean    @default(false)
-  availableNow Boolean    @default(false)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  type         String
+  isOpen       Boolean     @default(false)
+  averageRating Float      @default(0) 
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  owner        User        @relation(fields: [ownerId], references: [id])
   ownerId      String
-  owner        User       @relation(fields: [ownerId], references: [id])
+
   reviews      Review[]
+  foodItems    FoodItem[]
 }
 
 model Review {
   id         String   @id @default(uuid())
-  rating     Int
+  rating     Int      // 1 to 5
   comment    String?
-  imageUrl   String?
   createdAt  DateTime @default(now())
-  userId     String
-  foodSpotId String
+
   user       User     @relation(fields: [userId], references: [id])
+  userId     String
+
   foodSpot   FoodSpot @relation(fields: [foodSpotId], references: [id])
+  foodSpotId String
+}
+
+model FoodItem {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  isAvailable Boolean  @default(true)
+
+  foodSpot    FoodSpot @relation(fields: [foodSpotId], references: [id])
+  foodSpotId  String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

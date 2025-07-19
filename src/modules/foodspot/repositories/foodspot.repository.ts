@@ -1,6 +1,7 @@
 import prisma from "../../../config/prisma";
 import { FoodspotInput,FoodspotUpdateInput } from "../../../types/foodspot.types";
 
+
 export const FoodspotRepository = {
   create: async (data: FoodspotInput,ownerId:string) => {
     return await prisma.foodSpot.create({ data:{...data,owner:{connect:{id:ownerId}}} });

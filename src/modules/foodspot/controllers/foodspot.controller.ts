@@ -1,12 +1,8 @@
+import { AuthenticatedRequest } from "../../../types/auth.types";
 import { FoodspotService } from "../services/foodspot.service";
 import { Request, Response } from "express";
 
-// Type assertion as a workaround
-interface AuthenticatedRequest extends Request {
-  user?: {
-    userId: string;
-  };
-}
+
 
 export const FoodspotController = {
   create: async (req: Request, res: Response) => {
