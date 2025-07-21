@@ -18,7 +18,7 @@ export const FoodItemImageService = {
   },
   deleteImage:async(foodItemId:string)=>{
         const foodItem = await FoodItemImageRepository.findImageById(foodItemId);
-    if (!foodItem || !foodItem.imagePublicId) throw new Error("Image not found");
+    if (!foodItem?.imagePublicId) throw new Error("Image not found");
 
     await deleteImageFromCloudinary(foodItem.imagePublicId)
     return await FoodItemImageRepository.deleteImage(foodItemId)
