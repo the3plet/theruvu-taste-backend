@@ -1,3 +1,4 @@
+import { getIO } from "../../../socket";
 import { FoodItemInput, UpdateFoodItemInput } from "../dto/fooditem.dto";
 import { FoodItemRepository } from "../repositories/fooditem.repository";
 
@@ -49,6 +50,11 @@ export const FoodItemService = {
     if (!owner || owner.ownerId !== userId) {
       throw new Error("Unauthorized");
     }
-    return await FoodItemRepository.toggleAvilability(id, !item.isAvailable);
+    const updated= await FoodItemRepository.toggleAvilability(id, !item.isAvailable);
+    const io =getIO()
+    io.emit(`foodItem:update:${updated.foodSpotId}`,{
+      id:updated.id,isAvailable:updated.isAvailable
+    })
+    return updated
   },
 };
