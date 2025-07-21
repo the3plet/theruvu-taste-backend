@@ -5,6 +5,7 @@ import userRoute from './modules/user/routes/user.route'
 import reviewRoute from './modules/review/routes/review.routes'
 import foodItem from './modules/fooditem/routes/fooditem.routes'
 import liveAvilability from './modules/liveAvailability/routes/liveAvailability.route'
+import foodSpotImage from './modules/uploadImage/routes/foodImage.route'
 import { initSocket } from './socket';
 
 
@@ -19,6 +20,7 @@ app.use('/api/users',userRoute)
 app.use('/api/reviews',reviewRoute)
 app.use('/api/fooditem',foodItem)
 app.use('/liveavilability',liveAvilability)
+app.use('/api/upload',foodSpotImage)
 
 
 

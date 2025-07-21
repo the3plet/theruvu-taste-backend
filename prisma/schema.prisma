@@ -24,7 +24,8 @@ model FoodSpot {
   name         String
   description  String      @default("No description provided")
   location     String
-  imageUrl     String
+  imageUrl     String?
+  imagePublicId  String?
   type         String
   isOpen       Boolean     @default(false)
   averageRating Float      @default(0) 
@@ -56,6 +57,9 @@ model FoodItem {
   name        String
   price       Float
   isAvailable Boolean  @default(true)
+  imageUrl     String?
+  imagePublicId  String?
+
 
   foodSpot    FoodSpot @relation(fields: [foodSpotId], references: [id])
   foodSpotId  String
