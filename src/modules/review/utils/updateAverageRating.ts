@@ -6,12 +6,12 @@ export const updateAverageRating = async (foodSpotId: string) => {
     _avg: {
       rating: true,
     },
-    _count:{rating:true}
+    _count:{_all:true}
   });
   await prisma.foodSpot.update({
     where: { id: foodSpotId },
     data: { averageRating: result._avg.rating || 0,
-            totalReview: result._count.rating,
+            totalReview: result._count._all,
      },
   });
 };
