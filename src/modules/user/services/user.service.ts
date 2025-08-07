@@ -14,7 +14,7 @@ export const UserService = {
       email,
       password: hashedPassord,
     });
-    return { id: user.id, name: user.name, email: user.email };
+    return { userId: user.id, name: user.name, email: user.email };
   },
   login: async (email: string, password: string) => {
     const user = await UserRepository.findByEmail(email);
@@ -25,6 +25,6 @@ export const UserService = {
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: "7d",
     });
-    return { token, user: { id: user.id, name: user.name, email: user.email } };
+    return { token, user: { userId: user.id, name: user.name, email: user.email } };
   },
 };
