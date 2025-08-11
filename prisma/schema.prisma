@@ -56,6 +56,7 @@ model Review {
 model FoodItem {
   id          String   @id @default(uuid())
   name        String
+  description  String      @default("No description provided")
   price       Float
   isAvailable Boolean  @default(true)
   imageUrl     String?
